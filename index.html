@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gospodarstwo Agroturystyczne Przystań - Gdańsk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+        .gallery-grid img { width: 100%; height: 200px; object-fit: cover; border-radius: 1.5rem; cursor: pointer; transition: all 0.3s ease; }
+        .gallery-grid img:hover { transform: scale(1.03); filter: brightness(1.1); }
+        
+        section { scroll-margin-top: 100px; }
+
+        /* Czytelny napis z obwódką */
+        .text-outline {
+            color: white;
+            text-shadow: 
+                -2px -2px 0 #000,  
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 15px rgba(0,0,0,0.8);
+        }
+
+        #mobile-menu { display: none; }
+        #mobile-menu.active { display: flex; }
+
+        .mobile-call-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #688A60;
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        #lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; cursor: zoom-out; }
+        #lightbox img { max-width: 90%; max-height: 85%; border-radius: 1rem; border: 4px solid white; }
+
+        #rotating-text { transition: opacity 0.8s ease-in-out; }
+
+        @media (min-width: 1024px) { .mobile-call-btn { display: none; } }
+    </style>
+</head>
+<body class="bg-[#F8F7F2] text-[#5D5148] font-sans">
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Powiększenie">
+    </div>
+
+    <a href="tel:664112711" class="mobile-call-btn">
+        <i class="fas fa-phone text-2xl"></i>
+    </a>
+
+    <nav class="fixed w-full z-50 bg-[#F8F7F2]/95 backdrop-blur-md shadow-md border-b border-[#E0D8C8]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-24 items-center">
+                <a href="#" class="flex items-center space-x-4 hover:opacity-80 transition">
+                    <img class="h-20 w-auto" src="logo.png" alt="Logo Przystań">
+                    <div class="flex flex-col text-left">
+                        <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-[#688A60]">Gospodarstwo Agroturystyczne</span>
+                        <span class="font-black uppercase tracking-tighter text-3xl leading-none text-[#4A3B2E]">Przystań</span>
+                    </div>
+                </a>
+
+                <div class="hidden lg:flex space-x-6 text-base font-bold uppercase tracking-widest text-[#4A3B2E]">
+                    <a href="#o-nas" class="hover:text-[#688A60] transition">Ośrodek</a>
+                    <a href="#noclegi" class="hover:text-[#688A60] transition">Noclegi</a>
+                    <a href="#camping" class="hover:text-[#688A60] transition">Camping</a>
+                    <a href="#bar" class="hover:text-[#688A60] transition">Bar</a>
+                    <a href="#firmy" class="hover:text-[#688A60] transition">Firmy</a>
+                    <a href="#wedkarze" class="hover:text-[#688A60] transition">Wędkarze</a>
+                    <a href="#wyspa" class="hover:text-[#688A60] transition">Wyspa</a>
+                    <a href="#galeria" class="hover:text-[#688A60] transition">Galeria</a>
+                    <a href="#kontakt" class="bg-[#688A60] text-white px-6 py-3 rounded-full hover:bg-[#4A3B2E] transition shadow-lg">Kontakt</a>
+                </div>
+
+                <button id="menu-toggle" class="lg:hidden text-3xl">
+                    <i class="fas fa-bars text-[#4A3B2E]"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="absolute top-24 left-0 w-full bg-[#F8F7F2] border-b border-[#E0D8C8] flex-col p-6 space-y-4 font-bold uppercase text-center lg:hidden shadow-xl">
+            <a href="#o-nas" class="block py-2">Ośrodek</a>
+            <a href="#noclegi" class="block py-2">Noclegi</a>
+            <a href="#camping" class="block py-2">Camping</a>
+            <a href="#bar" class="block py-2">Bar</a>
+            <a href="#firmy" class="block py-2">Firmy</a>
+            <a href="#wedkarze" class="block py-2">Wędkarze</a>
+            <a href="#wyspa" class="block py-2">Wyspa</a>
+            <a href="#galeria" class="block py-2">Galeria</a>
+            <a href="#kontakt" class="block py-3 bg-[#688A60] text-white rounded-xl">Kontakt</a>
+        </div>
+    </nav>
+
+    <header class="relative h-screen flex items-center justify-center text-center">
+        <div class="absolute inset-0">
+            <img src="hero2.jpg" class="w-full h-full object-cover brightness-[0.85] object-right" alt="Przystań z góry">
+        </div>
+        <div class="relative z-10 px-4 max-w-5xl">
+            <h1 class="text-3xl md:text-6xl font-black mb-6 uppercase tracking-tighter leading-tight text-outline">Gospodarstwo Agroturystyczne<br>Przystań</h1>
+            <div class="h-24 flex items-center justify-center">
+                <p id="rotating-text" class="text-lg md:text-2xl font-bold italic text-outline max-w-3xl mx-auto">Odkryj przestrzeń, w której stary sad spotyka się z rzeką.</p>
+            </div>
+        </div>
+    </header>
+
+    <section id="o-nas" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <img src="ceglany.jpg" class="rounded-[3rem] shadow-2xl h-[500px] w-full object-cover" alt="Dom agroturystyki">
+                <div>
+                    <h2 class="text-4xl font-black uppercase mb-8 text-[#4A3B2E]">Sielska atmosfera w Gdańsku</h2>
+                    <div class="space-y-6 text-lg opacity-90 leading-relaxed text-[#5D5148]">
+                        <p>Zapraszamy do naszego gospodarstwa położonego w sercu dużego, starego sadu owocowego. To miejsce, gdzie czas zwalnia, a bezpośrednie sąsiedztwo Martwej Wisły pozwala na prawdziwy wypoczynek.</p>
+                        <p>Duży teren ośrodka daje poczucie swobody i prywatności, łącząc klimat historycznego domu z cegły z wygodą przytulnych domków letniskowych.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="noclegi" class="py-24 bg-[#F1EFE8]">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-black uppercase mb-16 text-[#4A3B2E]">Nasze Noclegi</h2>
+            <div class="grid md:grid-cols-3 gap-8 text-left text-sm">
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-lg">
+                    <img src="wnetrze.jpg" class="h-48 w-full object-cover rounded-2xl mb-6" alt="Pokój">
+                    <h3 class="text-xl font-black uppercase mb-4">Pokoje Gościnne</h3>
+                    <p class="opacity-80 mb-6">Pokoje z łazienkami, lodówkami i WiFi w budynku z cegły. Domowa atmosfera i spokój.</p>
+                    <img src="wnetrze2.jpg" class="h-20 w-full object-cover rounded-xl" alt="Detale">
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-lg border-b-8 border-[#688A60]">
+                    <img src="domek.jpg" class="h-48 w-full object-cover rounded-2xl mb-6" alt="Domek murowany">
+                    <h3 class="text-xl font-black uppercase mb-4 text-[#688A60]">Domki Murowane</h3>
+                    <p class="opacity-80 mb-6">Solidne, komfortowe domki w cieniu drzew owocowych. Idealne na rodzinny wypoczynek.</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-lg">
+                    <img src="drewnianyzew.jpg" class="h-48 w-full object-cover rounded-2xl mb-6" alt="Domek drewniany">
+                    <h3 class="text-xl font-black uppercase mb-4">Domki Drewniane</h3>
+                    <p class="opacity-80 mb-6">Przytulne wnętrza z drewna. Poczuj zapach natury i bliskość lasu tuż po przebudzeniu.</p>
+                    <img src="drewniany.jpg" class="h-20 w-full object-cover rounded-xl" alt="Wnętrze">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="camping" class="py-24 bg-[#4A3B2E] text-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8">
+                    <h2 class="text-4xl md:text-5xl font-black uppercase text-[#688A60]">Camping pod Jabłoniami</h2>
+                    <p class="text-xl opacity-90 leading-relaxed">Zapomnij o ciasnych campingach. Nasze pole to duża, zielona przestrzeń ukryta w starym sadzie. Twój namiot czy kamper stanie w cieniu jabłoni, zapewniając Ci prywatność i chłód.</p>
+                    <div class="grid grid-cols-2 gap-4 text-xs font-bold uppercase tracking-widest text-center">
+                        <div class="bg-white/10 p-4 rounded-xl border-l-4 border-[#688A60]"><i class="fas fa-shower mr-2"></i> Sanitariaty</div>
+                        <div class="bg-white/10 p-4 rounded-xl border-l-4 border-[#688A60]"><i class="fas fa-bolt mr-2"></i> Prąd</div>
+                        <div class="bg-white/10 p-4 rounded-xl border-l-4 border-[#688A60]"><i class="fas fa-wifi mr-2"></i> WiFi</div>
+                        <div class="bg-white/10 p-4 rounded-xl border-l-4 border-[#688A60]"><i class="fas fa-fire mr-2"></i> Ognisko</div>
+                    </div>
+                </div>
+                <img src="19.jpg" class="rounded-[3rem] shadow-2xl h-[450px] w-full object-cover" alt="Pole namiotowe">
+            </div>
+        </div>
+    </section>
+
+    <section id="bar" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="order-2 md:order-1 grid grid-cols-2 gap-4">
+                    <img src="bar2.jpg" class="rounded-3xl shadow-xl h-[400px] w-full object-cover" alt="Bar ogródek">
+                    <img src="18.jpg" class="rounded-3xl shadow-xl h-[400px] w-full object-cover mt-8" alt="Bar środek">
+                </div>
+                <div class="order-1 md:order-2 space-y-6">
+                    <h2 class="text-4xl font-black uppercase mb-8 text-[#4A3B2E]">Bar Przystań & Plac Zabaw</h2>
+                    <p class="text-lg opacity-90 leading-relaxed">Nasz sezonowy bar to oaza spokoju, gdzie serwujemy pyszne, domowe obiady, zimne piwo i aromatyczną kawę. Siedząc przy stoliku, masz bezpośredni widok na bezpieczny plac zabaw.</p>
+                    <p class="text-lg opacity-90">To idealne rozwiązanie dla rodziców – dzieci szaleją pod opieką, a Ty możesz odpocząć w sielskim otoczeniu naszego sadu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="firmy" class="py-24 bg-[#F1EFE8]">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-black uppercase text-center mb-16 text-[#4A3B2E]">Oferta dla Firm</h2>
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6 text-lg text-[#5D5148]">
+                    <h3 class="text-2xl font-black uppercase text-[#688A60]">Integracje i Bazy Pracownicze</h3>
+                    <p>Strategicza lokalizacja blisko Gdańska. Oferujemy duży, ogrodzony teren na spokojne spotkania integracyjne przy ognisku oraz profesjonalną bazę noclegową.</p>
+                    <ul class="space-y-4 font-bold uppercase text-xs tracking-widest text-[#4A3B2E]">
+                        <li><i class="fas fa-truck mr-3 text-xl text-[#688A60]"></i> Parking na busy i sprzęt</li>
+                        <li><i class="fas fa-file-invoice-dollar mr-3 text-xl text-[#688A60]"></i> Faktury VAT i płatność przelewem</li>
+                        <li><i class="fas fa-wifi mr-3 text-xl text-[#688A60]"></i> Szybkie WiFi w całym ośrodku</li>
+                    </ul>
+                </div>
+                <img src="integracja.jpg" class="rounded-[3rem] shadow-2xl h-[400px] w-full object-cover" alt="Baza firmowa">
+            </div>
+        </div>
+    </section>
+
+    <section id="wedkarze" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-black uppercase mb-12 text-[#4A3B2E]">Wędkarstwo nad Martwą Wisłą 🎣</h2>
+            <div class="grid md:grid-cols-2 gap-16 items-center text-left text-lg">
+                <img src="lodz.jpg" class="rounded-[3rem] shadow-xl h-[450px] w-full object-cover" alt="Łodzie wędkarskie">
+                <div class="space-y-6 leading-relaxed">
+                    <p>Bezpośrednie sąsiedztwo Martwej Wisły to raj dla pasjonatów. To unikalne łowisko słynie z rekordowych sandaczy, szczupaków i walecznych okoni.</p>
+                    <p>Stabilna linia brzegowa i leniwy nurt sprawiają, że ryba trzyma się blisko, a łowienie z łodzi daje nieskończone możliwości eksploracji trzcinowisk.</p>
+                    <p class="font-bold text-[#688A60] border-t-2 border-[#688A60]/20 pt-4">Dla osób planujących aktywne wędkowanie przygotowaliśmy atrakcyjne zniżki na wynajem łodzi wędkarskich.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wyspa" class="py-24 bg-[#F1EFE8]">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-black uppercase text-center mb-16">Wyspa Sobieszewska</h2>
+            <div class="grid md:grid-cols-2 gap-16 mb-16 items-start">
+                <div class="space-y-8">
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-lg">
+                        <h3 class="text-xl font-black uppercase mb-4 text-[#688A60]">Dzika Natura i Bursztyn</h3>
+                        <p class="text-sm opacity-80 leading-relaxed mb-4 text-[#5D5148]">Odkryj rezerwaty Ptasi Raj i Mewia Łacha, gdzie spotkasz foki. Szukaj bursztynów na najszerszych plażach Gdańska po każdym sztormie. To tu Bałtyk spotyka Naturę.</p>
+                        <a href="https://www.wyspa.pl" target="_blank" class="text-xs font-black uppercase underline tracking-widest text-[#4A3B2E]">Odkryj więcej na wyspa.pl</a>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-lg">
+                        <h3 class="text-xl font-black uppercase mb-4 text-[#688A60]">Mobilność Mevo</h3>
+                        <p class="text-sm opacity-80 mb-4 text-[#5D5148]">Odkrywaj wyspę ekologicznie. Przy bramie ośrodka znajdziesz stację roweru metropolitalnego Mevo.</p>
+                        <a href="https://rowermevo.pl" target="_blank" class="text-xs font-black uppercase underline tracking-widest text-[#4A3B2E]">Aplikacja Mevo</a>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-lg border-t-8 border-[#688A60]">
+                    <h3 class="text-xl font-black uppercase mb-8 text-[#688A60]"><i class="fas fa-bus mr-2 text-xl"></i> Dojazd ZTM</h3>
+                    <div class="grid grid-cols-1 gap-3 text-xs font-bold tracking-wider">
+                        <a href="https://ztm.gda.pl/rozklady/linia-112.html" target="_blank" class="bg-[#F8F7F2] p-4 rounded-xl hover:bg-[#688A60] hover:text-white transition group flex justify-between items-center"><span class="group-hover:translate-x-1 transition-transform">Linia 112</span> <i class="fas fa-chevron-right opacity-30"></i></a>
+                        <a href="https://ztm.gda.pl/rozklady/linia-186.html" target="_blank" class="bg-[#F8F7F2] p-4 rounded-xl hover:bg-[#688A60] hover:text-white transition group flex justify-between items-center"><span class="group-hover:translate-x-1 transition-transform">Linia 186</span> <i class="fas fa-chevron-right opacity-30"></i></a>
+                        <a href="https://ztm.gda.pl/rozklady/linia-212.html" target="_blank" class="bg-[#F8F7F2] p-4 rounded-xl hover:bg-[#688A60] hover:text-white transition group flex justify-between items-center"><span class="group-hover:translate-x-1 transition-transform">Linia 212 (Pośpieszny)</span> <i class="fas fa-chevron-right opacity-30"></i></a>
+                        <a href="https://ztm.gda.pl/rozklady/linia-N9.html" target="_blank" class="bg-black text-white p-4 rounded-xl hover:bg-[#688A60] transition group flex justify-between items-center"><span class="group-hover:translate-x-1 transition-transform">Linia N9 (Nocny)</span> <i class="fas fa-moon ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+            <img src="hero.jpg" class="w-full h-[350px] object-cover rounded-[3rem] shadow-2xl border-8 border-white" alt="Lokalizacja drona">
+        </div>
+    </section>
+
+    <section id="galeria" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-black uppercase mb-12">Galeria</h2>
+            <div class="gallery-grid">
+                <script>
+                    for(let i=1; i<=23; i++) {
+                        if(i !== 7 && i !== 11) {
+                            document.write(`<img src="${i}.jpg" alt="Zdjęcie ${i}" onclick="openLightbox(this.src)" loading="lazy">`);
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <footer id="kontakt" class="bg-[#5D5148] text-[#F8F7F2] py-24">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid lg:grid-cols-3 gap-16">
+                <div class="space-y-8">
+                    <h2 class="text-5xl font-black uppercase text-[#688A60]">Kontakt</h2>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest opacity-60 mb-2 font-black text-white">Adres:</p>
+                        <p class="text-2xl font-bold uppercase Leading-tight">ul. Jachtowa 2<br>80-680 Gdańsk</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest opacity-60 mb-2 font-black text-white">Zadzwoń:</p>
+                        <a href="tel:664112711" class="text-4xl font-black text-[#688A60] hover:text-white transition">664 112 711</a>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest opacity-60 mb-2 font-black text-white">Napisz do nas:</p>
+                        <a href="mailto:rezerwacje@sobieszewo.net" class="text-xl font-bold underline hover:text-[#688A60] transition">rezerwacje@sobieszewo.net</a>
+                    </div>
+                </div>
+
+                <div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 shadow-xl">
+                    <form action="https://formspree.io/f/rezerwacje@sobieszewo.net" method="POST" class="space-y-4">
+                        <input type="text" name="name" placeholder="Twoje Imię" class="w-full p-5 bg-white/10 border border-white/20 rounded-2xl text-white outline-none focus:border-[#688A60]" required>
+                        <input type="email" name="email" placeholder="E-mail" class="w-full p-5 bg-white/10 border border-white/20 rounded-2xl text-white outline-none focus:border-[#688A60]" required>
+                        <textarea name="message" placeholder="Twoja wiadomość..." class="w-full p-5 bg-white/10 border border-white/20 rounded-2xl text-white h-32 outline-none focus:border-[#688A60]" required></textarea>
+                        <button type="submit" class="w-full bg-[#688A60] py-5 rounded-2xl font-black uppercase hover:bg-white hover:text-[#4A3B2E] transition-all">Wyślij zapytanie</button>
+                    </form>
+                </div>
+
+                <div class="rounded-[3rem] overflow-hidden border-8 border-[#4A3B2E] h-[450px] shadow-2xl">
+                    <iframe src="maps.google.com/5" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+            <div class="text-center mt-20 text-[10px] uppercase tracking-[0.5em] opacity-30 italic">
+                © 2026 Gospodarstwo Agroturystyczne Przystań | Gdańsk
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('active'));
+        document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('active')));
+
+        const slogans = [
+            "Odkryj przestrzeń, w której stary sad spotyka się z rzeką.",
+            "Twoja sielska oaza w sercu zielonej Wyspy Sobieszewskiej.",
+            "Poczuj wolność na dużym, bezpiecznym terenie nad samą Wisłą.",
+            "Cisza, którą słychać tylko w cieniu naszych starych jabłoni.",
+            "Między rzeką a morzem – znajdź swoją idealną Przystań.",
+            "Widok, który uspokaja. Przestrzeń, która daje oddech.",
+            "Zapomnij o zgiełku miasta w naszym przestronnym ogrodzie.",
+            "Bezpośrednie sąsiedztwo natury na wyciągnięcie Twojej ręki.",
+            "Miejsce stworzone dla tych, którzy kochają spokój i swobodę.",
+            "Gospodarstwo Agroturystyczne Przystań – Twój dom blisko natury."
+        ];
+
+        let currentSlogan = 0;
+        const textElement = document.getElementById('rotating-text');
+
+        function rotateSlogans() {
+            textElement.style.opacity = 0;
+            setTimeout(() => {
+                currentSlogan = (currentSlogan + 1) % slogans.length;
+                textElement.innerText = slogans[currentSlogan];
+                textElement.style.opacity = 1;
+            }, 800);
+        }
+        setInterval(rotateSlogans, 5500);
+
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
